@@ -4,6 +4,7 @@ using System.Xml.Serialization;
 using Android;
 using Android.App;
 using Android.Content;
+using Android.Media;
 using LocalNotifications.Plugin.Abstractions;
 
 namespace LocalNotifications.Plugin
@@ -32,11 +33,30 @@ namespace LocalNotifications.Plugin
         private Notification createNativeNotification(LocalNotification notification)
         {
             var builder = new Notification.Builder(Application.Context)
-                .SetContentTitle(notification.Title)
-                .SetContentText(notification.Text)
-//                .SetSmallIcon(Resource.Drawable.IcDialogEmail);
+            .SetAutoCancel(true)
+                //.SetSmallIcon(Resource.Drawable.IcDialogEmail);
                 .SetSmallIcon(Application.Context.ApplicationInfo.Icon);
-
+            if (notification.Text.Length > 10)
+            {
+                Notification.BigTextStyle textStyle = new Notification.BigTextStyle();
+                textStyle.SetBigContentTitle(notification.Title);
+                textStyle.BigText(notification.Text);
+                builder.SetStyle(textStyle);
+            }
+            else
+            {
+                builder.SetContentTitle(notification.Title);
+                builder.SetContentText(notification.Text);
+            }
+            if (notification.PlaySound != NoficationSoundType.None)
+            {
+                RingtoneType ringToneType = (RingtoneType)notification.PlaySound;
+                builder.SetSound(RingtoneManager.GetDefaultUri(ringToneType));
+            }
+            if (notification.Vibrate)
+            {
+                builder.SetVibrate(new long[] { 0, 500 });
+            }
             var nativeNotification = builder.Build();
             return nativeNotification;
         }

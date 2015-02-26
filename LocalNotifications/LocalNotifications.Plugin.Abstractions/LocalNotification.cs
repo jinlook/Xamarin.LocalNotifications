@@ -38,5 +38,28 @@ namespace LocalNotifications.Plugin.Abstractions
         /// The notify time of notification.
         /// </value>
         public DateTime NotifyTime { get; set; }
+
+        /// <summary>
+        /// Enable notification vibrate, default set 500ms for android and ios not configurable.
+        /// </summary>
+        public bool Vibrate { get; set; }
+
+        /// <summary>
+        /// Play the default notification sound
+        /// </summary>
+        public NoficationSoundType PlaySound { get; set; }
+
+        public string CustomIOSSound { get; set; }
+    }
+
+    /// <summary>
+    /// None and RingtoneType
+    /// </summary>
+    public enum NoficationSoundType
+    {
+        None = 0,
+        Ringtone = 1,
+        Notification = 2,  //Recommended, maybe some pad have no Ringtone and Alarm
+        Alarm = 4
     }
 }
