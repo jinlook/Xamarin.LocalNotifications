@@ -6,6 +6,7 @@ using Foundation;
 #else
 using MonoTouch.Foundation;
 using MonoTouch.UIKit;
+using MonoTouch.AudioToolbox;
 #endif
 
 namespace LocalNotifications.Plugin
@@ -28,7 +29,7 @@ namespace LocalNotifications.Plugin
             UIApplication.SharedApplication.ScheduleLocalNotification(nativeNotification);
             if (notification.Vibrate)
             {
-                MonoTouch.AudioToolbox.SystemSound.Vibrate.PlaySystemSound();
+                SystemSound.Vibrate.PlaySystemSound();
             }
         }
 

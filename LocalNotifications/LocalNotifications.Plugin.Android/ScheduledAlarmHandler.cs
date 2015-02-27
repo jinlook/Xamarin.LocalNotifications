@@ -33,7 +33,8 @@ namespace LocalNotifications.Plugin
         private Notification createNativeNotification(LocalNotification notification)
         {
             var builder = new Notification.Builder(Application.Context)
-            .SetAutoCancel(true)
+                .SetPriority ((int)NotificationPriority.High)
+                .SetAutoCancel(true)
                 //.SetSmallIcon(Resource.Drawable.IcDialogEmail);
                 .SetSmallIcon(Application.Context.ApplicationInfo.Icon);
             if (notification.Text.Length > 10)
@@ -51,11 +52,15 @@ namespace LocalNotifications.Plugin
             if (notification.PlaySound != NoficationSoundType.None)
             {
                 RingtoneType ringToneType = (RingtoneType)notification.PlaySound;
-                builder.SetSound(RingtoneManager.GetDefaultUri(ringToneType));
+                var ringtoneUri = RingtoneManager.GetDefaultUri(ringToneType);
+                if (ringtoneUri == null)
+                    builder.SetDefaults(NotificationDefaults.Sound);
+                else
+                    builder.SetSound(ringtoneUri);
             }
             if (notification.Vibrate)
             {
-                builder.SetVibrate(new long[] { 0, 500 });
+                builder.SetVibrate(new long[] { 500, 500, 500, 500 });
             }
             var nativeNotification = builder.Build();
             return nativeNotification;
