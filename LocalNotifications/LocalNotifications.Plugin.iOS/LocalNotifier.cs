@@ -1,6 +1,8 @@
+using System;
 using System.Linq;
 using LocalNotifications.Plugin.Abstractions;
 #if __UNIFIED__
+using AudioToolbox;
 using UIKit;
 using Foundation;
 #else
@@ -9,6 +11,7 @@ using MonoTouch.UIKit;
 using MonoTouch.AudioToolbox;
 #endif
 
+
 namespace LocalNotifications.Plugin
 {
     /// <summary>
@@ -16,7 +19,7 @@ namespace LocalNotifications.Plugin
     /// </summary>
     public class LocalNotifier : ILocalNotifier
     {
-        private const string NotificationKey = "LocalNotificationKey";
+        private const string NotificationKey = "JinlifeNotificationKey";
 
         /// <summary>
         /// Notifies the specified notification.
@@ -55,7 +58,7 @@ namespace LocalNotifications.Plugin
             {
                 AlertAction = notification.Title,
                 AlertBody = notification.Text,
-                FireDate = notification.NotifyTime,
+                FireDate = notification.NotifyTime.DateTimeToNSDate(),
                 UserInfo = NSDictionary.FromObjectAndKey(NSObject.FromObject(notification.Id), NSObject.FromObject(NotificationKey))
             };
 
@@ -72,6 +75,22 @@ namespace LocalNotifications.Plugin
                 }
             }
             return nativeNotification;
+        }
+    }
+    public static class DateTimeExtensions
+    {
+        public static DateTime NSDateToDateTime(this NSDate date)
+        {
+            DateTime reference = TimeZone.CurrentTimeZone.ToLocalTime(
+                new DateTime(2001, 1, 1, 0, 0, 0));
+            return reference.AddSeconds(date.SecondsSinceReferenceDate);
+        }
+
+        public static NSDate DateTimeToNSDate(this DateTime date)
+        {
+            if (date.Kind == DateTimeKind.Unspecified)
+                date = DateTime.SpecifyKind(date, DateTimeKind.Local);  /* DateTimeKind.Local or DateTimeKind.Utc, this depends on each app */
+            return (NSDate)date;
         }
     }
 }

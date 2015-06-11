@@ -33,8 +33,8 @@ namespace LocalNotifications.Plugin
         private Notification createNativeNotification(LocalNotification notification)
         {
             var builder = new Notification.Builder(Application.Context)
-                .SetPriority ((int)NotificationPriority.High)
-                .SetAutoCancel(true)
+                .SetPriority((int)NotificationPriority.High)
+                //.SetAutoCancel(true)
                 //.SetSmallIcon(Resource.Drawable.IcDialogEmail);
                 .SetSmallIcon(Application.Context.ApplicationInfo.Icon);
             if (notification.Text.Length > 10)
